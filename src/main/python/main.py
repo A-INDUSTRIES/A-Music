@@ -1,1 +1,11 @@
+from fbs_runtime.application_context.PySide2 import ApplicationContext
+from package.window import MainWindow
 
+import sys
+
+if __name__ == '__main__':
+    appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
+    window = MainWindow(appctxt)
+    window.showNormal()
+    exit_code = appctxt.app.exec_()      # 2. Invoke appctxt.app.exec_()
+    sys.exit(exit_code)

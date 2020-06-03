@@ -1,2 +1,2 @@
-# A-Music
-A simple music player coded in Python by a learner.
+# A+Music
+### A simple music player coded in Python by a learner.

@@ -21,6 +21,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def setup_ui(self):
         self.create_widgets()
+        self.create_sys_tray_icon()
         self.modify_widgets()
         self.create_layouts()
         self.add_widgets_to_layouts()
@@ -57,6 +58,18 @@ class MainWindow(QtWidgets.QWidget):
         self.btn_setts = QtWidgets.QPushButton()
 
         self.sl_volume = QtWidgets.QSlider()
+
+    def create_sys_tray_icon(self):
+        self.tray = QtWidgets.QSystemTrayIcon()
+        self.tray.setIcon(QtGui.QIcon(self.appctxt.get_resource("icon.png")))
+        self.tray.setVisible(True)
+        self.tray_menu = QtWidgets.QMenu()
+        self.tray_menu.addAction(QtGui.QIcon(self.appctxt.get_resource("play.png")), "Play/Pause", self.play_pause)
+        self.tray_menu.addAction(QtGui.QIcon(self.appctxt.get_resource("next.png")), "Next", self.next)
+        self.tray_menu.addAction(QtGui.QIcon(self.appctxt.get_resource("back.png")), "Previous", self.back)
+        self.tray_menu.addAction(QtGui.QIcon(self.appctxt.get_resource("stop.png")), "Stop", self.stop)
+        self.tray_menu.addAction(QtGui.QIcon(self.appctxt.get_resource("close.png")), "Show/Hide", self.showhide)
+        self.tray.setContextMenu(self.tray_menu)
 
     def modify_widgets(self):
         self.btn_easter_egg.setFixedSize(25, 35)
@@ -235,6 +248,7 @@ If you read this, you're God!
             self.easter_egg_color_nbr = 0
             self.easter_egg_timer.start()
             self.settings["easter_egg_on"] = True
+            self.save_settings()
         elif self.settings["easter_egg_on"] == True:
             self.easter_egg_timer.stop()
             self.lb_title.setStyleSheet("QLabel { color : red; }")
@@ -274,6 +288,7 @@ If you read this, you're God!
                             background: lightblue;
                         }""")
             self.settings["easter_egg_on"] = False
+            self.save_settings()
 
     def easter_egg_animate(self):
         if self.easter_egg_color_nbr == 0:
@@ -846,7 +861,7 @@ If you read this, you're God!
             pass
 
     def save_settings(self):
-        with open(os.path.join(self.cur_dir, "settings.json"), "w") as c:
+        with open(os.path.join(self.cur_dir, "A+Music/settings.json"), "w") as c:
             json.dump(self.settings, c)
 
     def set_btn_icon(self, btn_list, icon_path_list):
@@ -930,6 +945,12 @@ QSlider::sub-page:horizontal {
             self.lb_volume.setStyleSheet("QLabel { color : default; }")
         self.save_settings()
         self.refresh_volume()
+
+    def showhide(self):
+        if self.isHidden():
+            self.showNormal()
+        else:
+            self.hide()
 
     def stop(self):
         self.sound.stop()
@@ -1285,7 +1306,7 @@ class Wizard(QtWidgets.QWizard):
     #   Methods---------------------------------------------------
 
     def open_settings(self):
-        with open(os.path.join(self.cur_dir, "settings.json"), "r") as f:
+        with open(os.path.join(self.cur_dir, "A+Music/settings.json"), "r") as f:
             self.settings = json.load(f)
             self.settings["folder"] = "C:/Users/pc/Music"
             self.settings["volume"] = 100

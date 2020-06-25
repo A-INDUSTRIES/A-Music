@@ -45,10 +45,10 @@ class MainWindow(QtWidgets.QWidget):
         self.add_widgets_to_layouts()
         logging.info("Setting Connections...")
         self.setup_connections()
-        logging.info("Setting the Menu.")
-        self.settings_menu()
         logging.info("Opening Settings.")
         self.open_settings()
+        logging.info("Setting the Menu.")
+        self.settings_menu()
         logging.info("Making Wizard if First Time.")
         self.wizard()
         self.get_musics()
@@ -145,23 +145,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lb_volume.setAlignment(QtCore.Qt.AlignCenter)
 
         self.time_bar.setOrientation(QtCore.Qt.Horizontal)
-        self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-    border: 1px;
-    height: 10px;
-    background: lightgray;
-}
-
-QSlider::handle:horizontal {
-    background: red;
-    border: 1px;
-    width: 5px;
-    margin: -5px 0;
-    border-radius: 2px;
-}
-
-QSlider::sub-page:horizontal {
-    background: lightblue;
-}""")
+        self.set_sliders_stylesheet("lightblue", [self.time_bar])
 
         self.list.setDragEnabled(False)
 
@@ -171,25 +155,8 @@ QSlider::sub-page:horizontal {
         self.sl_volume.installEventFilter(self)
         self.sl_volume.setMouseTracking(True)
         self.sl_volume.setPageStep(1)
-
         self.sl_volume.setOrientation(QtCore.Qt.Horizontal)
-        self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-    border: 1px;
-    height: 10px;
-    background: lightgray;
-}
-
-QSlider::handle:horizontal {
-    background: red;
-    border: 1px;
-    width: 5px;
-    margin: -5px 0;
-    border-radius: 2px;
-}
-
-QSlider::sub-page:horizontal {
-    background: lightblue;
-}""")
+        self.set_sliders_stylesheet("lightblue", [self.sl_volume])
         self.sl_volume.setRange(0, 100)
 
         self.pix = QtGui.QPixmap(self.appctxt.get_resource("volume.png"))
@@ -205,8 +172,6 @@ QSlider::sub-page:horizontal {
 
         self.lb_volume.setHidden(True)
         self.sl_volume.setHidden(True)
-
-        self.time_bar.installEventFilter(self)
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)
@@ -290,61 +255,8 @@ If you read this, you're God!
             self.easter_egg_timer.stop()
             self.lb_title.setStyleSheet("QLabel { color : red; }")
             self.list.setStyleSheet("QListWidget::item { color : black; }")
-            if self.sl_volume.value() >= 75:
-                self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: orange;
-            }""")
-                self.lb_volume.setStyleSheet("QLabel { color : orange; }")
-            elif self.sl_volume.value() < 75:
-                self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                            border: 1px;
-                            height: 10px;
-                            background: lightgray;
-                        }
-
-                        QSlider::handle:horizontal {
-                            background: red;
-                            border: 1px;
-                            width: 5px;
-                            margin: -5px 0;
-                            border-radius: 2px;
-                        }
-
-                        QSlider::sub-page:horizontal {
-                            background: lightblue;
-                        }""")
-                self.lb_volume.setStyleSheet("QLabel { color : default; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                            border: 1px;
-                            height: 10px;
-                            background: lightgray;
-                        }
-
-                        QSlider::handle:horizontal {
-                            background: red;
-                            border: 1px;
-                            width: 5px;
-                            margin: -5px 0;
-                            border-radius: 2px;
-                        }
-
-                        QSlider::sub-page:horizontal {
-                            background: lightblue;
-                        }""")
+            self.set_volume()
+            self.set_sliders_stylesheet("lightblue", [self.time_bar])
             self.settings["easter_egg_on"] = False
             self.save_settings()
             logging.info("Easter Egg Off.")
@@ -355,420 +267,57 @@ If you read this, you're God!
         if self.easter_egg_color_nbr == 0:
             self.lb_title.setStyleSheet("QLabel { color : red; }")
             self.list.setStyleSheet("QListWidget::item { color : red; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: red;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: red;
-            }""")
+            self.set_sliders_stylesheet("red", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 1:
             self.lb_title.setStyleSheet("QLabel { color : orange; }")
             self.list.setStyleSheet("QListWidget::item { color : orange; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: orange;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: orange;
-            }""")
+            self.set_sliders_stylesheet("orange", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 2:
             self.lb_title.setStyleSheet("QLabel { color : yellow; }")
             self.list.setStyleSheet("QListWidget::item { color : yellow; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: yellow;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: yellow;
-            }""")
+            self.set_sliders_stylesheet("yellow", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 3:
             self.lb_title.setStyleSheet("QLabel { color : green; }")
             self.list.setStyleSheet("QListWidget::item { color : green; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: green;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: green;
-            }""")
+            self.set_sliders_stylesheet("green", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 4:
             self.lb_title.setStyleSheet("QLabel { color : blue; }")
             self.list.setStyleSheet("QListWidget::item { color : blue; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: blue;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: blue;
-            }""")
+            self.set_sliders_stylesheet("blue", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 5:
             self.lb_title.setStyleSheet("QLabel { color : purple; }")
             self.list.setStyleSheet("QListWidget::item { color : purple; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: purple;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: purple;
-            }""")
+            self.set_sliders_stylesheet("purple", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 6:
             self.lb_title.setStyleSheet("QLabel { color : pink; }")
             self.list.setStyleSheet("QListWidget::item { color : pink; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: pink;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: pink;
-            }""")
+            self.set_sliders_stylesheet("pink", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 7:
             self.lb_title.setStyleSheet("QLabel { color : brown; }")
             self.list.setStyleSheet("QListWidget::item { color : brown; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: brown;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: brown;
-            }""")
+            self.set_sliders_stylesheet("brown", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 8:
             self.lb_title.setStyleSheet("QLabel { color : white; }")
             self.list.setStyleSheet("QListWidget::item { color : white; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: white;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: white;
-            }""")
+            self.set_sliders_stylesheet("white", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 9:
             self.lb_title.setStyleSheet("QLabel { color : gray; }")
             self.list.setStyleSheet("QListWidget::item { color : gray; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: gray;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: gray;
-            }""")
+            self.set_sliders_stylesheet("gray", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr += 1
         elif self.easter_egg_color_nbr == 10:
             self.lb_title.setStyleSheet("QLabel { color : black; }")
             self.list.setStyleSheet("QListWidget::item { color : black; }")
-            self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: black;
-            }""")
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: black;
-            }""")
+            self.set_sliders_stylesheet("black", [self.time_bar, self.sl_volume])
             self.easter_egg_color_nbr = 0
 
     def eventFilter(self, watched: QtCore.QObject, event: QtCore.QEvent) -> bool:
@@ -851,11 +400,15 @@ If you read this, you're God!
 
     def mouseMoveEvent(self, event:QtGui.QMouseEvent):
         """Moving window with delta using earlier pos defined by mousePressEvent."""
+        self.delta = QtCore.QPoint(event.globalPos() - self.old_pos)
         if not self.isMaximized() == True:
             logging.info("Moving Window...")
-            self.delta = QtCore.QPoint(event.globalPos() - self.old_pos)
             self.move(self.x() + self.delta.x(), self.y() + self.delta.y())
             self.old_pos = event.globalPos()
+            if self.old_pos == QtCore.QPoint(self.old_pos.x(), 0):
+                self.max()
+        elif self.isMaximized() and self.delta.y() > 0:
+            self.max()
 
     def modify_details(self):
         """Opening window allowing to change selected track's tags."""
@@ -881,7 +434,7 @@ If you read this, you're God!
             logging.info("Creating Settings file.")
             os.makedirs(os.path.join(cur_dir, ""))
             with open(os.path.join(cur_dir, "settings.json"), "w") as a:
-                self.settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False}
+                self.settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False, "darkmode": False}
                 json.dump(self.settings, a)
         with open(os.path.join(cur_dir, "settings.json"), "r") as f:
             self.settings = json.load(f)
@@ -950,17 +503,20 @@ If you read this, you're God!
         with open(os.path.join(cur_dir, "settings.json"), "w") as c:
             json.dump(self.settings, c)
 
-    def set_btn_icon(self, btn_list, icon_path_list):
+    @staticmethod
+    def set_btn_icon(btn_list, icon_path_list):
         a = 0
         for btn in btn_list:
             btn.setIcon(QtGui.QIcon(icon_path_list[a]))
             a += 1
 
-    def set_btn_size(self, btn_list, H, V):
+    @staticmethod
+    def set_btn_size(btn_list, H, V):
         for btn in btn_list:
             btn.setFixedSize(H, V)
 
-    def set_btn_flat(self, btn_list, cond):
+    @staticmethod
+    def set_btn_flat(btn_list, cond):
         for btn in btn_list:
             btn.setFlat(cond)
 
@@ -994,45 +550,38 @@ If you read this, you're God!
         self.settings["volume"] = self.sl_volume.value()
         self.lb_volume.setText(f"{self.sl_volume.value()}%")
         if self.sl_volume.value() >= 75:
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-    border: 1px;
-    height: 10px;
-    background: lightgray;
-}
-
-QSlider::handle:horizontal {
-    background: red;
-    border: 1px;
-    width: 5px;
-    margin: -5px 0;
-    border-radius: 2px;
-}
-
-QSlider::sub-page:horizontal {
-    background: orange;
-}""")
+            self.set_sliders_stylesheet("orange", [self.sl_volume])
             self.lb_volume.setStyleSheet("QLabel { color : orange; }")
         elif self.sl_volume.value() < 75:
-            self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-                border: 1px;
-                height: 10px;
-                background: lightgray;
-            }
-
-            QSlider::handle:horizontal {
-                background: red;
-                border: 1px;
-                width: 5px;
-                margin: -5px 0;
-                border-radius: 2px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: lightblue;
-            }""")
+            self.set_sliders_stylesheet("lightblue", [self.sl_volume])
             self.lb_volume.setStyleSheet("QLabel { color : default; }")
         self.save_settings()
         self.refresh_volume()
+
+    @staticmethod
+    def set_sliders_stylesheet(bg_colour, sl_list):
+        """Set default style sheet of QSliders.
+        :param bg_colour>Any color usable in stylesheet.
+        :param sl_list>List of Sliders to be applied to.
+        """
+        for slider in sl_list:
+            slider.setStyleSheet("""QSlider::groove:horizontal {
+                        border: 1px;
+                        height: 10px;
+                        background: lightgray;
+                    }
+
+                    QSlider::handle:horizontal {
+                        background: red;
+                        border: 1px;
+                        width: 5px;
+                        margin: -5px 0;
+                        border-radius: 2px;
+                    }
+
+                    QSlider::sub-page:horizontal {
+                        background: """ + bg_colour + """;
+            }""")
 
     def show_hide(self):
         """Used by the QSystemTrayIcon."""
@@ -1050,14 +599,14 @@ QSlider::sub-page:horizontal {
         self.time_bar.setValue(0)
         self.lb_time.setText("0:0 / 0:0")
         self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("play.png")])
-        self.timer_.stop()
+        self.timer.stop()
         self.media.clear()
         self.file = QtMultimedia.QMediaContent(self.media)
         self.sound.setMedia(self.file)
 
     def wizard(self):
         """Opens wizard if first time launch."""
-        if self.settings["configured"] == False:
+        if not self.settings["configured"]:
             logging.info("Opening Wizard")
             self.dialog = Wizard(cur_dir)
             self.dialog.exec_()

@@ -6,18 +6,20 @@ v1.2.0
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
 
-from help_window import Help
-from details_window import ModifyDetails
-from wizard_window import Wizard
+from package.help_window import Help
+from package.details_window import ModifyDetails
+from package.wizard_window import Wizard
 
 import os, json, eyed3, logging
 
-cur_dir = os.path.join(os.path.expanduser("~"), "A+Music") #Gets the folder where setting file is gonna be.
+cur_dir = os.path.join(os.path.expanduser("~"), "A+Music")
+# Gets the folder where setting file is gonna be.
 
 log_file = os.path.join(cur_dir, "latest_log.txt")
 
 logging.basicConfig(level=logging.INFO, filename=log_file, filemode="w",
-                    format='%(asctime)s | %(levelname)s - %(message)s') #Configuring logging system.
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Configuring logging system.
 
 class MainWindow(QtWidgets.QWidget):
 
@@ -362,12 +364,7 @@ If you read this, you're God!
             try:
                 self.tag = eyed3.load(self.file).tag
             except:
-                self.error = QtWidgets.QMessageBox()
-                self.error.setWindowTitle("Error!")
-                self.error.setText("Error 0X0001: Can't read properties!")
-                self.error.setInformativeText("Attempted reading ''Title'' and ''Artist'' properties as them not being "
-                                              "registered in file.\nConsider adding them.")
-                self.error.exec_()
+                pass
             if not self.tag.title == None and not self.tag.artist == None:
                 self.filelist.append(f"{self.tag.title} | {self.tag.artist}")
             else:
@@ -439,7 +436,7 @@ If you read this, you're God!
             logging.info("Creating Settings file.")
             os.makedirs(os.path.join(cur_dir, ""))
             with open(os.path.join(cur_dir, "settings.json"), "w") as a:
-                self.settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False, "darkmode": False}
+                self.settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False}
                 json.dump(self.settings, a)
         with open(os.path.join(cur_dir, "settings.json"), "r") as f:
             self.settings = json.load(f)

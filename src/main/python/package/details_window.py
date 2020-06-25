@@ -1,3 +1,8 @@
+"""
+Author: DAOUST A. @AINDUSTRIES
+Project: A+Music Player
+v1.2.0
+"""
 from PySide2 import QtWidgets
 
 import eyed3

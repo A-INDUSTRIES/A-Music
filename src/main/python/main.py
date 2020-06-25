@@ -1,3 +1,8 @@
+"""
+Author: DAOUST A. @AINDUSTRIES
+Project: A+Music Player
+v1.2.0
+"""
 from fbs_runtime.application_context.PySide2 import ApplicationContext
 from package.main_window import MainWindow
 

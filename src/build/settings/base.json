@@ -1,6 +1,6 @@
 {
     "app_name": "A+Music",
-    "author": "AINDUSTRIES",
+    "author": "DAOUST A. @AINDUSTRIES",
     "main_module": "src/main/python/main.py",
-    "version": "1.0.0"
+    "version": "1.2.0"
 }

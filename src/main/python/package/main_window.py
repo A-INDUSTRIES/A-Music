@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.2.0
+v1.3.0 Pre2
 """
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
@@ -9,6 +9,7 @@ from glob import glob
 from package.help_window import Help
 from package.details_window import ModifyDetails
 from package.wizard_window import Wizard
+from package.speed_window import SetSpeed
 
 import os, json, eyed3, logging
 
@@ -52,6 +53,8 @@ class MainWindow(QtWidgets.QWidget):
         self.add_widgets_to_layouts()
         logging.info("Setting Connections...")
         self.setup_connections()
+        logging.info("Setting Shortcuts...")
+        self.setup_shortcuts()
         logging.info("Opening Settings.")
         self.open_settings()
         logging.info("Setting the Menu.")
@@ -213,6 +216,22 @@ class MainWindow(QtWidgets.QWidget):
         self.btn_back.clicked.connect(self.back)
         self.btn_easter_egg.clicked.connect(self.easter_egg)
         self.sl_volume.valueChanged.connect(self.set_volume)
+
+    def setup_shortcuts(self):
+        self.play_pause_short_a = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaPlay), self)
+        self.play_pause_short_a.activated.connect(self.play_pause)
+
+        self.play_pause_short_b = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space), self)
+        self.play_pause_short_b.activated.connect(self.play_pause)
+
+        self.next_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaNext), self)
+        self.next_short.activated.connect(self.next)
+
+        self.back_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaPrevious), self)
+        self.back_short.activated.connect(self.back)
+
+        self.stop_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaStop), self)
+        self.stop_short.activated.connect(self.stop)
 
     #  Methods---------------------------------------------------
 
@@ -466,12 +485,12 @@ If you read this, you're God!
         self.minutes = int(self.sound.duration() / 1000 / 60)
         self.seconds = int(self.sound.duration() / 1000 % 60)
         self.time_bar.setRange(0, self.sound.duration())
-        if self.sound.state() == self.sound.state().PlayingState:
+        if self.sound.state() == QtMultimedia.QMediaPlayer.PlayingState:
             self.time_bar.setValue(self.sound.position())
             self.lb_time.setText(
                 f"{int(self.sound.position() / 1000 / 60)}:{int(self.sound.position() / 1000 % 60)} / {self.minutes}:{self.seconds}")
-            if self.time_bar.value() == self.sound.duration():
-                self.next()
+        elif self.sound.mediaStatus() == QtMultimedia.QMediaPlayer.MediaStatus.EndOfMedia:
+            self.next()
 
     def play_pause(self):
         if self.sound.state() == self.sound.state().PlayingState:
@@ -546,6 +565,8 @@ If you read this, you're God!
                              QtGui.QKeySequence("f5"))
         self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("folder.png")), "Set The Music Folder",
                              self.set_folder, QtGui.QKeySequence("f2"))
+        self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("folder.png")), "Set The Playback Speed",
+                             self.set_speed, QtGui.QKeySequence("f3"))
 
     def set_volume(self):
         logging.info("Setting volume.")
@@ -593,6 +614,10 @@ If you read this, you're God!
         else:
             logging.info("Hiding window.")
             self.hide()
+
+    def set_speed(self):
+        self.win = SetSpeed(self)
+        self.win.show()
 
     def stop(self):
         """Stops the current playing song."""

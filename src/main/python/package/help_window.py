@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.2.0
+v1.3.0 Pre2
 """
 from PySide2 import QtWidgets, QtCore, QtGui
 

@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.3.0 Pre2
+v1.3.0 Pre3
 """
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
@@ -233,6 +233,18 @@ class MainWindow(QtWidgets.QWidget):
         self.stop_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaStop), self)
         self.stop_short.activated.connect(self.stop)
 
+        self.volume_up_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), self)
+        self.volume_up_short.activated.connect(self.volume_up)
+
+        self.volume_down_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), self)
+        self.volume_down_short.activated.connect(self.volume_down)
+
+        self.seek_forward_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), self)
+        self.seek_forward_short.activated.connect(self.seek_forward)
+
+        self.seek_backward_short = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), self)
+        self.seek_backward_short.activated.connect(self.seek_backward)
+
     #  Methods---------------------------------------------------
 
     def about(self):
@@ -350,28 +362,10 @@ If you read this, you're God!
         """Showing volume bar if label hovered. Hiding if unhovered."""
         if watched == self.lb_img_volume and event.type() == QtCore.QEvent.Enter:
             logging.info("Showing Volume Bar...")
-            self.main_layout.removeWidget(self.lb_img_volume)
-            self.main_layout.removeWidget(self.time_bar)
-
-            self.main_layout.addWidget(self.lb_volume, 5, 18, 1, 1)
-            self.main_layout.addWidget(self.sl_volume, 5, 16, 1, 2)
-            self.main_layout.addWidget(self.lb_img_volume, 5, 15, 1, 1)
-            self.main_layout.addWidget(self.time_bar, 5, 5, 1, 10)
-
-            self.sl_volume.setHidden(False)
-            self.lb_volume.setHidden(False)
+            self.show_volume()
         elif watched == self.sl_volume and event.type() == QtCore.QEvent.Leave:
             logging.info("Hiding Volume Bar...")
-            self.main_layout.removeWidget(self.lb_volume)
-            self.main_layout.removeWidget(self.sl_volume)
-            self.main_layout.removeWidget(self.lb_img_volume)
-            self.main_layout.removeWidget(self.time_bar)
-
-            self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
-            self.main_layout.addWidget(self.time_bar, 5, 5, 1, 13)
-
-            self.sl_volume.setHidden(True)
-            self.lb_volume.setHidden(True)
+            self.hide_volume()
         return super().eventFilter(watched, event)
 
     def get_musics(self):
@@ -396,6 +390,16 @@ If you read this, you're God!
         logging.info("Opened Help.")
         self.help_win = Help(self.appctxt)
         self.help_win.show()
+
+    def hide_volume(self):
+        self.main_layout.removeWidget(self.lb_volume)
+        self.main_layout.removeWidget(self.sl_volume)
+        self.main_layout.removeWidget(self.lb_img_volume)
+        self.main_layout.removeWidget(self.time_bar)
+        self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
+        self.main_layout.addWidget(self.time_bar, 5, 5, 1, 13)
+        self.sl_volume.setHidden(True)
+        self.lb_volume.setHidden(True)
 
     def max(self):
         """Maximizing or minimizing window based on current state."""
@@ -606,6 +610,18 @@ If you read this, you're God!
                         background: """ + bg_colour + """;
             }""")
 
+    def set_speed(self):
+        self.win = SetSpeed(self)
+        self.win.show()
+
+    def seek_forward(self):
+        self.time_bar.setValue(self.time_bar.value()+5000)
+        self.set_time()
+
+    def seek_backward(self):
+        self.time_bar.setValue(self.time_bar.value()-5000)
+        self.set_time()
+
     def show_hide(self):
         """Used by the QSystemTrayIcon."""
         if self.isHidden():
@@ -615,9 +631,15 @@ If you read this, you're God!
             logging.info("Hiding window.")
             self.hide()
 
-    def set_speed(self):
-        self.win = SetSpeed(self)
-        self.win.show()
+    def show_volume(self):
+        self.main_layout.removeWidget(self.lb_img_volume)
+        self.main_layout.removeWidget(self.time_bar)
+        self.main_layout.addWidget(self.lb_volume, 5, 18, 1, 1)
+        self.main_layout.addWidget(self.sl_volume, 5, 16, 1, 2)
+        self.main_layout.addWidget(self.lb_img_volume, 5, 15, 1, 1)
+        self.main_layout.addWidget(self.time_bar, 5, 5, 1, 10)
+        self.sl_volume.setHidden(False)
+        self.lb_volume.setHidden(False)
 
     def stop(self):
         """Stops the current playing song."""
@@ -630,6 +652,24 @@ If you read this, you're God!
         self.media.clear()
         self.file = QtMultimedia.QMediaContent(self.media)
         self.sound.setMedia(self.file)
+
+    def volume_up(self):
+        self.show_volume()
+        self.sl_volume.setValue(self.sl_volume.value()+2)
+        self.volume_timer = QtCore.QTimer()
+        self.volume_timer.setSingleShot(True)
+        self.volume_timer.setInterval(2000)
+        self.volume_timer.timeout.connect(self.hide_volume)
+        self.volume_timer.start()
+
+    def volume_down(self):
+        self.show_volume()
+        self.sl_volume.setValue(self.sl_volume.value()-2)
+        self.volume_timer = QtCore.QTimer()
+        self.volume_timer.setSingleShot(True)
+        self.volume_timer.setInterval(2000)
+        self.volume_timer.timeout.connect(self.hide_volume)
+        self.volume_timer.start()
 
     def wizard(self):
         """Opens wizard if first time launch."""

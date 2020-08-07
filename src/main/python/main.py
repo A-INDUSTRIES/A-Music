@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.3.0 Pre2
+v1.3.0 Pre3
 """
 from fbs_runtime.application_context.PySide2 import ApplicationContext
 from package.main_window import MainWindow

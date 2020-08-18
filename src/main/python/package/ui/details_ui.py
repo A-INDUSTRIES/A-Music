@@ -1,9 +1,12 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.3.0 Pre3
+v1.3.0
 """
 from PySide2 import QtWidgets
+
+from package.api.player_api import *
+from package.api.style_api import *
 
 import eyed3
 
@@ -14,6 +17,8 @@ class ModifyDetails(QtWidgets.QWidget):
         self.file = file
         self.mainwindow = mainwindow
         self.setup_ui()
+        self.style_ = Style(self)
+        self.style_.set_style()
 
     def setup_ui(self):
         self.create_widgets()
@@ -33,9 +38,8 @@ class ModifyDetails(QtWidgets.QWidget):
         self.lb_artist = QtWidgets.QLabel("Artist:")
 
     def modify_widgets(self):
-        self.tag = eyed3.load(self.file).tag
-        self.le_title.setText(self.tag.title)
-        self.le_artist.setText(self.tag.artist)
+        self.le_title.setText(read_music_attributes()[0])
+        self.le_artist.setText(read_music_attributes()[1])
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)
@@ -54,8 +58,6 @@ class ModifyDetails(QtWidgets.QWidget):
     #   Methods---------------------------------------------------
 
     def save_details(self):
-        self.tag.artist = self.le_artist.text()
-        self.tag.title = self.le_title.text()
-        self.tag.save()
+        write_music_attributes(self.file, self.le_title.text(), self.le_artist.text())
         self.close()
         self.mainwindow.refresh()

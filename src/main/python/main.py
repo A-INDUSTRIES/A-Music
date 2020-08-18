@@ -4,7 +4,7 @@ Project: A+Music Player
 v1.3.0 Pre3
 """
 from fbs_runtime.application_context.PySide2 import ApplicationContext
-from package.main_window import MainWindow
+from package.ui.main_ui import MainWindow
 
 import sys
 

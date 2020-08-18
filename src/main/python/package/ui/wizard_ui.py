@@ -1,9 +1,12 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.3.0 Pre3
+v1.3.0
 """
 from PySide2 import QtWidgets, QtCore
+
+from package.api.settings_api import *
+
 
 import json
 import os
@@ -39,6 +42,9 @@ class Wizard(QtWidgets.QWizard):
         self.page2_lb_vol = QtWidgets.QLabel("Volume:")
         self.page2_lb_vol_perc = QtWidgets.QLabel("100%")
         self.page2_sl = QtWidgets.QSlider()
+        self.page2_style_lb = QtWidgets.QLabel("Style:")
+        self.page2_style_cb = QtWidgets.QComboBox()
+        self.page2_style_cb.addItems(["Normal", "Dark"])
         self.page2_sl.setRange(0, 100)
         self.page2_sl.setValue(100)
         self.page2_sl.setOrientation(QtCore.Qt.Horizontal)
@@ -65,8 +71,11 @@ class Wizard(QtWidgets.QWizard):
         self.page2_layout.addWidget(self.page2_sl, 2, 3)
         self.page2_layout.addWidget(self.page2_lb_vol, 2, 1)
         self.page2_layout.addWidget(self.page2_lb_vol_perc, 2, 4)
+        self.page2_layout.addWidget(self.page2_style_lb, 3, 1)
+        self.page2_layout.addWidget(self.page2_style_cb, 3, 4)
         self.page2_btn.clicked.connect(self.page2_set_folder)
         self.page2_sl.valueChanged.connect(self.page2_set_volume)
+        self.page2_style_cb.activated.connect(self.page2_set_style)
 
     def page3(self):
         self.page3 = QtWidgets.QWizardPage()
@@ -81,12 +90,10 @@ class Wizard(QtWidgets.QWizard):
     #   Methods---------------------------------------------------
 
     def open_settings(self):
-        with open(os.path.join(self.cur_dir, "settings.json"), "r") as f:
-            self.settings = json.load(f)
-            self.settings["folder"] = "C:/Users/pc/Music"
-            self.settings["volume"] = 100
-            self.settings["easter_egg_on"] = False
-            f.close()
+        self.settings = read_settings()
+        self.settings["folder"] = "C:/Users/pc/Music"
+        self.settings["volume"] = 100
+        self.settings["easter_egg_on"] = False
 
     def page2_set_folder(self):
         self.ask = QtWidgets.QFileDialog()
@@ -100,7 +107,10 @@ class Wizard(QtWidgets.QWizard):
         self.settings["volume"] = self.page2_sl.value()
         self.save_settings()
 
+    def page2_set_style(self):
+        self.settings["style"] = self.page2_style_cb.currentText().lower()
+        self.save_settings()
+
     def save_settings(self):
         self.settings["configured"] = True
-        with open(os.path.join(self.cur_dir, "settings.json"), "w") as c:
-            json.dump(self.settings, c)
+        write_settings(self.settings)

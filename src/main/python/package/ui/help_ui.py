@@ -1,9 +1,11 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.3.0 Pre3
+v1.3.0
 """
 from PySide2 import QtWidgets, QtCore, QtGui
+from package.api.style_api import *
+
 
 class Help(QtWidgets.QWidget):
 
@@ -17,6 +19,8 @@ class Help(QtWidgets.QWidget):
         self.move(self.rectangle.topLeft())
         self.appctxt = appctxt
         self.setup_ui()
+        self.style_ = Style(self)
+        self.style_.set_style()
 
     def setup_ui(self):
         self.create_widgets()
@@ -45,7 +49,7 @@ class Help(QtWidgets.QWidget):
         self.btn_back = QtWidgets.QPushButton()
         self.lb_btn_back = QtWidgets.QLabel("Click to play the last song.")
         self.btn_stop = QtWidgets.QPushButton()
-        self.lb_btn_stop =QtWidgets.QLabel("Click to stop the current playing song.")
+        self.lb_btn_stop = QtWidgets.QLabel("Click to stop the current playing song.")
         self.btn_ok = QtWidgets.QPushButton("Ok")
         self.output = QtWidgets.QLabel("Output: None")
 
@@ -60,56 +64,34 @@ class Help(QtWidgets.QWidget):
                            self.btn_next,
                            self.btn_back,
                            self.btn_stop,
-                           self.btn_setts,], True)
-        self.set_btn_icon([self.btn_play,
-                           self.btn_next,
-                           self.btn_back,
-                           self.btn_stop,
-                           self.btn_setts],
-                          [self.appctxt.get_resource("play.png"),
-                           self.appctxt.get_resource("next.png"),
-                           self.appctxt.get_resource("back.png"),
-                           self.appctxt.get_resource("stop.png"),
-                           self.appctxt.get_resource("more.png")])
+                           self.btn_setts, ], True)
+        if read_settings()["style"] == "normal":
+            self.set_btn_icon([self.btn_play,
+                               self.btn_next,
+                               self.btn_back,
+                               self.btn_stop,
+                               self.btn_setts],
+                              [self.appctxt.get_resource("icons/normal/play.png"),
+                               self.appctxt.get_resource("icons/normal/next.png"),
+                               self.appctxt.get_resource("icons/normal/back.png"),
+                               self.appctxt.get_resource("icons/normal/stop.png"),
+                               self.appctxt.get_resource("icons/normal/more.png")])
+        else:
+            self.set_btn_icon([self.btn_play,
+                               self.btn_next,
+                               self.btn_back,
+                               self.btn_stop,
+                               self.btn_setts],
+                              [self.appctxt.get_resource("icons/darkmode/play.png"),
+                               self.appctxt.get_resource("icons/darkmode/next.png"),
+                               self.appctxt.get_resource("icons/darkmode/back.png"),
+                               self.appctxt.get_resource("icons/darkmode/stop.png"),
+                               self.appctxt.get_resource("icons/darkmode/more.png")])
         self.time_bar.setOrientation(QtCore.Qt.Horizontal)
         self.btn_setts.setMenu(self.setts)
         self.btn_setts.setFixedSize(45, 25)
-        self.time_bar.setStyleSheet("""QSlider::groove:horizontal {
-            border: 1px;
-            height: 10px;
-            background: lightgray;
-        }
-
-        QSlider::handle:horizontal {
-            background: red;
-            border: 1px;
-            width: 5px;
-            margin: -5px 0;
-            border-radius: 2px;
-        }
-
-        QSlider::sub-page:horizontal {
-            background: lightblue;
-        }""")
         self.sl_volume.setPageStep(1)
         self.sl_volume.setOrientation(QtCore.Qt.Horizontal)
-        self.sl_volume.setStyleSheet("""QSlider::groove:horizontal {
-            border: 1px;
-            height: 10px;
-            background: lightgray;
-        }
-
-        QSlider::handle:horizontal {
-            background: red;
-            border: 1px;
-            width: 5px;
-            margin: -5px 0;
-            border-radius: 2px;
-        }
-
-        QSlider::sub-page:horizontal {
-            background: lightblue;
-        }""")
         self.sl_volume.setRange(0, 100)
         self.list.addItems(["Test N°1", "Test N°2", "Test N°3"])
         self.list.setFixedWidth(75)
@@ -166,14 +148,34 @@ class Help(QtWidgets.QWidget):
             btn.setFlat(cond)
 
     def settings_menu(self):
-        self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("about.png")), "About", self.about,
-                             QtGui.QKeySequence("f10"))
-        self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("help.png")), "Help", self.help,
-                             QtGui.QKeySequence("f1"))
-        self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("refresh.png")), "Refresh The List", self.refresh,
-                             QtGui.QKeySequence("f5"))
-        self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("folder.png")), "Set The Music Folder",
-                             self.folder, QtGui.QKeySequence("f2"))
+        if read_settings()["style"] == "normal":
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/normal/about.png")), "About", self.about,
+                                 QtGui.QKeySequence("f10"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/normal/help.png")), "Help", self.help,
+                                 QtGui.QKeySequence("f1"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/normal/refresh.png")), "Refresh The List",
+                                 self.refresh,
+                                 QtGui.QKeySequence("f5"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/normal/folder.png")),
+                                 "Set The Music Folder",
+                                 self.folder, QtGui.QKeySequence("f2"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/normal/settings.png")), "Settings",
+                                 self.settings, QtGui.QKeySequence("f3"))
+        else:
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/about.png")), "About",
+                                 self.about,
+                                 QtGui.QKeySequence("f10"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/help.png")), "Help", self.help,
+                                 QtGui.QKeySequence("f1"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/refresh.png")),
+                                 "Refresh The List",
+                                 self.refresh,
+                                 QtGui.QKeySequence("f5"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/folder.png")),
+                                 "Set The Music Folder",
+                                 self.folder, QtGui.QKeySequence("f2"))
+            self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/settings.png")), "Settings",
+                                 self.settings, QtGui.QKeySequence("f3"))
 
     #   Output----------------------------------------------------
 
@@ -212,3 +214,6 @@ class Help(QtWidgets.QWidget):
 
     def refresh(self):
         self.output.setText("Output: Refreshed the list.")
+
+    def settings(self):
+        self.output.setText("Output: Opened settings.")

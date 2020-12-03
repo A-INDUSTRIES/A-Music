@@ -1,21 +1,14 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-<<<<<<< HEAD
 v1.4.0Pre2
-=======
-v1.3.0
->>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 """
 from glob import glob
 
 import os, eyed3
 
 from package.api.settings_api import *
-<<<<<<< HEAD
 from package.ui.error_ui import *
-=======
->>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 
 
 def list_files():
@@ -48,12 +41,8 @@ def write_music_attributes(file, title, artist):
     tag = eyed3.load(file).tag
     tag.title = title
     tag.artist = artist
-<<<<<<< HEAD
     try:
         tag.save()
     except PermissionError:
         error = Error("PermissionError : Can't write tag to file.\nPlease check file premissions.")
         error.exec_()
-=======
-    tag.save()
->>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e

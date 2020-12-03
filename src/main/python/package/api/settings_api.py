@@ -1,11 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-<<<<<<< HEAD
 v1.4.0Pre2
-=======
-v1.3.0
->>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 """
 import os, json
 

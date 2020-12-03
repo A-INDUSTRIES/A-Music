@@ -1,11 +1,18 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
+<<<<<<< HEAD
 v1.4.0Pre2
 """
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
 from pypresence import Presence
+=======
+v1.3.0 Pre3
+"""
+from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
+from glob import glob
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 
 from package.ui.help_ui import Help
 from package.ui.details_ui import ModifyDetails
@@ -18,8 +25,11 @@ from package.api.settings_api import *
 from package.api.logging_api import *
 from package.api.style_api import *
 
+<<<<<<< HEAD
 import time
 
+=======
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 class MainWindow(QtWidgets.QWidget):
 
     def __init__(self, appctxt):
@@ -41,11 +51,14 @@ class MainWindow(QtWidgets.QWidget):
         self.setup_ui()
         self.style_.set_style()
         self.style_.set_main_ui_icons()
+<<<<<<< HEAD
         self.rpc_timer = QtCore.QTimer()
         self.rpc_timer.setSingleShot(True)
         self.rpc_timer.setInterval(0)
         self.rpc_timer.timeout.connect(self.set_rpc)
         self.rpc_timer.start()
+=======
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 
     def setup_ui(self):
         log_info("Creating Widgets...")
@@ -247,10 +260,13 @@ class MainWindow(QtWidgets.QWidget):
             self.nbr = self.list.count() - 1
         self.play()
 
+<<<<<<< HEAD
     def closeEvent(self, event):
         self.RPC.close()
         event.accept()
 
+=======
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
     def easter_egg(self):
         """Turning on/off easter egg."""
         if self.settings["easter_egg_on"] == False:
@@ -407,7 +423,11 @@ class MainWindow(QtWidgets.QWidget):
     def modify_details(self):
         """Opening window allowing to change selected track's tags."""
         log_info("Opened Modify Details.")
+<<<<<<< HEAD
         self.details = ModifyDetails(list_files()[self.list.currentRow()], self)
+=======
+        self.details = ModifyDetails(self.files[self.list.currentRow()], self)
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
         self.details.show()
         self.stop()
 
@@ -444,12 +464,16 @@ class MainWindow(QtWidgets.QWidget):
         self.timer = QtCore.QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.play_bar_n_lb)
+<<<<<<< HEAD
         self.timerb = QtCore.QTimer()
         self.timerb.setInterval(500)
         self.timerb.setSingleShot(True)
         self.timerb.timeout.connect(self.update_rpc)
         self.timer.start()
         self.timerb.start()
+=======
+        self.timer.start()
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
         self.refresh_volume()
 
     def play_bar_n_lb(self):
@@ -557,6 +581,7 @@ class MainWindow(QtWidgets.QWidget):
             self.setts.addAction(QtGui.QIcon(self.appctxt.get_resource("icons/darkmode/settings.png")), "Settings",
                                  self.set_settings, QtGui.QKeySequence("f3"))
 
+<<<<<<< HEAD
     def set_rpc(self):
         self.client_id = "783388836049977396"
         self.RPC = Presence(client_id=self.client_id)
@@ -573,6 +598,8 @@ class MainWindow(QtWidgets.QWidget):
         self.max_time = time.time() + self.player.duration()/1000
         self.RPC.update(large_image="a-music-ico", details=f"Listening to " + self._song["title"], start=self.time_stamp, state=f"from " + self._song["artist"], end=self.max_time)
 
+=======
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
     def set_volume(self):
         log_info("Setting volume.")
         self.settings["volume"] = self.sl_volume.value()
@@ -621,10 +648,14 @@ class MainWindow(QtWidgets.QWidget):
         self.player.stop()
         self.time_bar.setValue(0)
         self.lb_time.setText("0:0 / 0:0")
+<<<<<<< HEAD
         if self.settings["style"] == "normal":
             self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/normal/play.png")])
         else:
             self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/darkmode/play.png")])
+=======
+        self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("play.png")])
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
         self.timer.stop()
         self.media.clear()
         self.file = QtMultimedia.QMediaContent(self.media)

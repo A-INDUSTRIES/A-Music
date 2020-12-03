@@ -1,7 +1,11 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
+<<<<<<< HEAD
 v1.4.0Pre2
+=======
+v1.3.0
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 """
 from PySide2 import QtWidgets
 
@@ -38,8 +42,13 @@ class ModifyDetails(QtWidgets.QWidget):
         self.lb_artist = QtWidgets.QLabel("Artist:")
 
     def modify_widgets(self):
+<<<<<<< HEAD
         self.le_title.setText(read_music_attributes(self.file)["title"])
         self.le_artist.setText(read_music_attributes(self.file)["artist"])
+=======
+        self.le_title.setText(read_music_attributes()[0])
+        self.le_artist.setText(read_music_attributes()[1])
+>>>>>>> 734af32e8da76126ad3a022cc94fde045ebdcb1e
 
     def create_layouts(self):
         self.main_layout = QtWidgets.QGridLayout(self)

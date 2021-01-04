@@ -8,4 +8,4 @@
 ***
 ### Patches:
 - Fix Discord Rich Presence when no Title or Artist. `DONE`
-- Fix Import issues when developing.
+- Fix Import issues when developing. `DONE`

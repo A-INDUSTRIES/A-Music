@@ -3,13 +3,13 @@
 block_cipher = None
 
 
-a = Analysis(['F:\\A+Music\\src\\main\\python\\main.py'],
-             pathex=['F:\\A+Music\\target\\PyInstaller'],
+a = Analysis(['C:\\Users\\AINDUSTRIES\\Documents\\GitHub\\A-Music\\src\\main\\python\\main.py'],
+             pathex=['C:\\Users\\AINDUSTRIES\\Documents\\GitHub\\A-Music\\target\\PyInstaller'],
              binaries=[],
              datas=[],
              hiddenimports=[],
-             hookspath=['f:\\a+music\\venv\\lib\\site-packages\\fbs\\freeze\\hooks'],
-             runtime_hooks=['F:\\A+Music\\target\\PyInstaller\\fbs_pyinstaller_hook.py'],
+             hookspath=['c:\\program files\\python36\\lib\\site-packages\\fbs\\freeze\\hooks'],
+             runtime_hooks=['C:\\Users\\AINDUSTRIES\\Documents\\GitHub\\A-Music\\target\\PyInstaller\\fbs_pyinstaller_hook.py'],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=False,
-          console=False , icon='F:\\A+Music\\src\\main\\icons\\Icon.ico')
+          console=False , icon='C:\\Users\\AINDUSTRIES\\Documents\\GitHub\\A-Music\\src\\main\\icons\\Icon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

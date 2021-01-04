@@ -7,5 +7,5 @@
 - All in one file (but structured) `DONE`
 ***
 ### Patches:
-- Fix Discord Rich Presence when no Title or Artist.
+- Fix Discord Rich Presence when no Title or Artist. `DONE`
 - Fix Import issues when developing.

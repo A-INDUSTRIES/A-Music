@@ -799,7 +799,14 @@ class MainWindow(QtWidgets.QWidget):
         self._song = read_music_attributes(list_files()[self.list.currentRow()])
         self.time_stamp = time.time()
         self.max_time = time.time() + self.player.duration()/1000
-        self.RPC.update(large_image="a-music-ico", details=f"Listening to " + self._song["title"], start=self.time_stamp, state=f"from " + self._song["artist"], end=self.max_time)
+        if not self._song["title"] == None and not self._song["artist"] == None:
+            self.RPC.update(large_image="a-music-ico", details=f"Listening to " + self._song["title"], start=self.time_stamp, state=f"from " + self._song["artist"], end=self.max_time)
+        elif self._song["title"] == None and not self._song["artist"] == None:
+            self.RPC.update(large_image="a-music-ico", details=f"Listening to Unknown", start=self.time_stamp, state=f"from " + self._song["artist"], end=self.max_time)
+        elif self._song["artist"] == None and not self._song["title"] == None:
+            self.RPC.update(large_image="a-music-ico", details=f"Listening to " + self._song["title"], start=self.time_stamp, state=f"from Unknown", end=self.max_time)
+        else:
+            self.RPC.update(large_image="a-music-ico", details=f"Listening to Unknown", start=self.time_stamp, state=f"from Unknown", end=self.max_time)
 
     def set_volume(self):
         logging.info("Setting volume.")

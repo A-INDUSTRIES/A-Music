@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v1.4.0Pre2
+v2.0.0
 """
 from fbs_runtime.application_context.PySide2 import ApplicationContext
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia

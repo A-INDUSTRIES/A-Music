@@ -1,6 +1,6 @@
 # Here are the futur **implementations/changes/patches** for the **next** update:
 ### Additions:
-- Shuffle mode accessible from the settings window.
+- Shuffle mode accessible from the settings window. `DONE`
 - Addition of a "played_list" so the back btn works with suffle. `DONE`
 ***
 ### Changes:

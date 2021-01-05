@@ -313,6 +313,7 @@ class MainWindow(QtWidgets.QWidget):
         self.btn_next = QtWidgets.QPushButton()
         self.btn_back = QtWidgets.QPushButton()
         self.btn_stop = QtWidgets.QPushButton()
+        self.btn_play_mode = QtWidgets.QPushButton()
 
         self.btn_easter_egg = QtWidgets.QPushButton()
 
@@ -356,7 +357,8 @@ class MainWindow(QtWidgets.QWidget):
                            self.btn_play,
                            self.btn_next,
                            self.btn_back,
-                           self.btn_stop], 25, 25)
+                           self.btn_stop,
+                           self.btn_play_mode], 25, 25)
 
         self.set_btn_flat([self.btn_close,
                            self.btn_max,
@@ -366,7 +368,8 @@ class MainWindow(QtWidgets.QWidget):
                            self.btn_back,
                            self.btn_stop,
                            self.btn_setts,
-                           self.btn_easter_egg], True)
+                           self.btn_easter_egg,
+                           self.btn_play_mode], True)
 
         self.lb_title.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 25))
         self.lb_title.setAlignment(QtCore.Qt.AlignTop)
@@ -416,8 +419,9 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.list, 3, 1, 1, 22)
         self.main_layout.addWidget(self.btn_setts, 1, 19, 1, 1)
         self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 5, 1, 13)
+        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 12)
         self.main_layout.addWidget(self.btn_easter_egg, 1, 1, 2, 1)
+        self.main_layout.addWidget(self.btn_play_mode, 5, 5, 1, 1)
 
     def setup_connections(self):
         self.btn_close.clicked.connect(self.close)
@@ -1173,7 +1177,7 @@ def create_settings():
     os.makedirs(os.path.join(cur_dir, ""), exist_ok=True)
     with open(os.path.join(cur_dir, "settings.json"), "w") as a:
         settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False,
-                    "style": "normal"}
+                    "style": "normal", "play_mode": "straight"}
         json.dump(settings, a)
 
 def read_settings():
@@ -1182,7 +1186,7 @@ def read_settings():
     with open(os.path.join(cur_dir, "settings.json"), "r") as f:
         settings = json.load(f)
         try:
-            if settings["style"]:
+            if settings["style"] and settings["play_mode"]:
                 return settings
         except KeyError:
             create_settings()
@@ -1282,7 +1286,8 @@ def set_main_ui_icons(self):
                                self.btn_next,
                                self.btn_back,
                                self.btn_stop,
-                               self.btn_setts],
+                               self.btn_setts,
+                               self.btn_play_mode],
                               [self.appctxt.get_resource("icons/normal/close.png"),
                                self.appctxt.get_resource("icons/normal/maximize.png"),
                                self.appctxt.get_resource("icons/normal/min.png"),
@@ -1290,7 +1295,8 @@ def set_main_ui_icons(self):
                                self.appctxt.get_resource("icons/normal/next.png"),
                                self.appctxt.get_resource("icons/normal/back.png"),
                                self.appctxt.get_resource("icons/normal/stop.png"),
-                               self.appctxt.get_resource("icons/normal/more.png")])
+                               self.appctxt.get_resource("icons/normal/more.png"),
+                               self.appctxt.get_resource("icons/normal/shuffle.png")])
         self.pix = QtGui.QPixmap(self.appctxt.get_resource("icons/normal/volume.png"))
         self.lb_img_volume.setPixmap(self.pix.scaled(25, 25))
     else:
@@ -1301,7 +1307,8 @@ def set_main_ui_icons(self):
                                    self.btn_next,
                                    self.btn_back,
                                    self.btn_stop,
-                                   self.btn_setts],
+                                   self.btn_setts,
+                                   self.btn_play_mode],
                                   [self.appctxt.get_resource("icons/darkmode/close.png"),
                                    self.appctxt.get_resource("icons/darkmode/maximize.png"),
                                    self.appctxt.get_resource("icons/darkmode/min.png"),
@@ -1309,7 +1316,8 @@ def set_main_ui_icons(self):
                                    self.appctxt.get_resource("icons/darkmode/next.png"),
                                    self.appctxt.get_resource("icons/darkmode/back.png"),
                                    self.appctxt.get_resource("icons/darkmode/stop.png"),
-                                   self.appctxt.get_resource("icons/darkmode/more.png")])
+                                   self.appctxt.get_resource("icons/darkmode/more.png"),
+                                   self.appctxt.get_resource("icons/darkmode/shuffle.png")])
         self.pix = QtGui.QPixmap(self.appctxt.get_resource("icons/darkmode/volume.png"))
         self.lb_img_volume.setPixmap(self.pix.scaled(25, 25))
 

@@ -8,7 +8,7 @@ from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
 from pypresence import Presence
 
-import time, json, os, logging, eyed3, sys
+import time, json, os, logging, eyed3, sys, random
 
 LOG_FILE = os.path.join(os.path.join(os.path.expanduser("~"), "A+Music"), "latest_log.txt")
 logging.basicConfig(level=logging.INFO, filename=LOG_FILE, filemode="w",
@@ -436,6 +436,7 @@ class MainWindow(QtWidgets.QWidget):
         self.btn_back.clicked.connect(self.back)
         self.btn_easter_egg.clicked.connect(self.easter_egg)
         self.sl_volume.valueChanged.connect(self.set_volume)
+        self.btn_play_mode.clicked.connect(self.set_play_mode)
 
     def setup_shortcuts(self):
         self.play_pause_short_a = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_MediaPlay), self)
@@ -650,12 +651,15 @@ class MainWindow(QtWidgets.QWidget):
 
     def next(self):
         logging.info("Playing Next Track.")
-        self.nbr = self.list.currentRow() + 1
-        if not self.list.count() == self.nbr:
-            self.list.setCurrentRow(self.list.currentRow() + 1)
+        if not self.settings["play_mode"] == "shuffle":
+            self.nbr = self.list.currentRow() + 1
+            if not self.list.count() == self.nbr:
+                self.list.setCurrentRow(self.list.currentRow() + 1)
+            else:
+                self.list.setCurrentRow(0)
+                self.nbr = 0
         else:
-            self.list.setCurrentRow(0)
-            self.nbr = 0
+            self.list.setCurrentRow(random.randint(0, self.list.count()))
         self.play()
 
     def open_settings(self):
@@ -763,6 +767,15 @@ class MainWindow(QtWidgets.QWidget):
         self.settings["folder"] = self.music_dir
         self.save_settings()
         self.refresh()
+
+    def set_play_mode(self):
+        if self.settings["play_mode"] == "straight":
+            self.settings["play_mode"] = "shuffle"
+            write_settings(self.settings)
+        elif self.settings["play_mode"] == "shuffle":
+            self.settings["play_mode"] = "straight"
+            write_settings(self.settings)
+        set_main_ui_icons(self)
 
     def set_time(self):
         logging.info("Setting position in track.")
@@ -1086,7 +1099,7 @@ class Wizard(QtWidgets.QWizard):
         QSlider::sub-page:horizontal {
             background: lightblue;
         }""")
-        self.page2_layout = QtWidgets.QGridLayout(self.page2)
+        self.page2_layout = QtWidgets.QGridLayout(self.page2_)
         self.page2_layout.addWidget(self.page2_btn, 1, 4)
         self.page2_layout.addWidget(self.page2_lb, 1, 1, 1, 3)
         self.page2_layout.addWidget(self.page2_sl, 2, 3)
@@ -1286,8 +1299,7 @@ def set_main_ui_icons(self):
                                self.btn_next,
                                self.btn_back,
                                self.btn_stop,
-                               self.btn_setts,
-                               self.btn_play_mode],
+                               self.btn_setts],
                               [self.appctxt.get_resource("icons/normal/close.png"),
                                self.appctxt.get_resource("icons/normal/maximize.png"),
                                self.appctxt.get_resource("icons/normal/min.png"),
@@ -1295,10 +1307,13 @@ def set_main_ui_icons(self):
                                self.appctxt.get_resource("icons/normal/next.png"),
                                self.appctxt.get_resource("icons/normal/back.png"),
                                self.appctxt.get_resource("icons/normal/stop.png"),
-                               self.appctxt.get_resource("icons/normal/more.png"),
-                               self.appctxt.get_resource("icons/normal/shuffle.png")])
+                               self.appctxt.get_resource("icons/normal/more.png")])
         self.pix = QtGui.QPixmap(self.appctxt.get_resource("icons/normal/volume.png"))
         self.lb_img_volume.setPixmap(self.pix.scaled(25, 25))
+        if read_settings()["play_mode"] == "straight":
+            self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/normal/right-arrow.png")])
+        else:
+            self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/normal/shuffle.png")])
     else:
         self.set_btn_icon([self.btn_close,
                                    self.btn_max,
@@ -1307,8 +1322,7 @@ def set_main_ui_icons(self):
                                    self.btn_next,
                                    self.btn_back,
                                    self.btn_stop,
-                                   self.btn_setts,
-                                   self.btn_play_mode],
+                                   self.btn_setts,],
                                   [self.appctxt.get_resource("icons/darkmode/close.png"),
                                    self.appctxt.get_resource("icons/darkmode/maximize.png"),
                                    self.appctxt.get_resource("icons/darkmode/min.png"),
@@ -1316,10 +1330,13 @@ def set_main_ui_icons(self):
                                    self.appctxt.get_resource("icons/darkmode/next.png"),
                                    self.appctxt.get_resource("icons/darkmode/back.png"),
                                    self.appctxt.get_resource("icons/darkmode/stop.png"),
-                                   self.appctxt.get_resource("icons/darkmode/more.png"),
-                                   self.appctxt.get_resource("icons/darkmode/shuffle.png")])
+                                   self.appctxt.get_resource("icons/darkmode/more.png")])
         self.pix = QtGui.QPixmap(self.appctxt.get_resource("icons/darkmode/volume.png"))
         self.lb_img_volume.setPixmap(self.pix.scaled(25, 25))
+        if read_settings()["play_mode"] == "straight":
+            self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/darkmode/right-arrow.png")])
+        else:
+            self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/darkmode/shuffle.png")])
 
 def set_main_ui_easter_egg(self, color) -> str:
     if read_settings()["style"] == "normal":

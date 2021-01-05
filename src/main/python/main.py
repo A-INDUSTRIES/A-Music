@@ -252,6 +252,8 @@ class Help(QtWidgets.QWidget):
     def settings(self):
         self.output.setText("Output: Opened settings.")
 
+    def play_mode(self):
+        self.output.setText("Output: Change the playing mode.")
 class MainWindow(QtWidgets.QWidget):
 
     def __init__(self, appctxt):
@@ -506,6 +508,7 @@ class MainWindow(QtWidgets.QWidget):
             self.lb_title.setStyleSheet("QLabel { color : red; }")
             self.settings["easter_egg_on"] = False
             self.save_settings()
+            self.set_volume()
             logging.info("Easter Egg Off.")
 
     def easter_egg_animate(self):
@@ -595,7 +598,7 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.removeWidget(self.lb_img_volume)
         self.main_layout.removeWidget(self.time_bar)
         self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 5, 1, 13)
+        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 12)
         self.sl_volume.setHidden(True)
         self.lb_volume.setHidden(True)
 
@@ -866,7 +869,7 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.lb_volume, 5, 18, 1, 1)
         self.main_layout.addWidget(self.sl_volume, 5, 16, 1, 2)
         self.main_layout.addWidget(self.lb_img_volume, 5, 15, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 5, 1, 10)
+        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 9)
         self.sl_volume.setHidden(False)
         self.lb_volume.setHidden(False)
 
@@ -1314,6 +1317,10 @@ def set_main_ui_icons(self):
             self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/normal/right-arrow.png")])
         else:
             self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/normal/shuffle.png")])
+        if self.player.state() == self.player.state().PlayingState:
+            self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/normal/pause.png")])
+        else:
+            self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/normal/play.png")])
     else:
         self.set_btn_icon([self.btn_close,
                                    self.btn_max,
@@ -1337,6 +1344,10 @@ def set_main_ui_icons(self):
             self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/darkmode/right-arrow.png")])
         else:
             self.set_btn_icon([self.btn_play_mode],[self.appctxt.get_resource("icons/darkmode/shuffle.png")])
+        if self.player.state() == self.player.state().PlayingState:
+            self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/darkmode/pause.png")])
+        else:
+            self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/darkmode/play.png")])
 
 def set_main_ui_easter_egg(self, color) -> str:
     if read_settings()["style"] == "normal":

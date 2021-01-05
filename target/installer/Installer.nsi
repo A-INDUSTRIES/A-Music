@@ -50,6 +50,10 @@ FunctionEnd
     !define MUI_FINISHPAGE_RUN_CHECKED
     !define MUI_FINISHPAGE_RUN_TEXT "Run A+Music"
     !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
+    !define MUI_FINISHPAGE_SHOWREADME
+    !define MUI_FINISHPAGE_SHOWREADME_CHECKED
+    !define MUI_FINISHPAGE_SHOWREADME_TEXT "Add Icon to Desktop"
+    !define MUI_FINISHPAGE_SHOWREADME_FUNCTION "SetIcon"
   !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_CONFIRM
@@ -98,4 +102,8 @@ SectionEnd
 Function LaunchLink
   !addplugindir "."
   ShellExecAsUser::ShellExecAsUser "open" "$SMPROGRAMS\A+Music.lnk"
+FunctionEnd
+
+Function SetIcon
+  CreateShortCut "$DESKTOP\A+Music.lnk" "$InstDir\A+Music.exe"
 FunctionEnd

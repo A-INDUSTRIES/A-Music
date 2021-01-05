@@ -277,6 +277,7 @@ class MainWindow(QtWidgets.QWidget):
         self.rpc_timer.setInterval(0)
         self.rpc_timer.timeout.connect(self.set_rpc)
         self.rpc_timer.start()
+        self.played_list = []
 
     def setup_ui(self):
         logging.info("Creating Widgets...")
@@ -470,13 +471,14 @@ class MainWindow(QtWidgets.QWidget):
 
     def back(self):
         logging.info("Playing last track.")
-        self.nbr = self.list.currentRow() - 1
-        if not self.nbr == -1:
-            self.list.setCurrentRow(self.list.currentRow() - 1)
-        else:
-            self.list.setCurrentRow(self.list.count() - 1)
-            self.nbr = self.list.count() - 1
-        self.play()
+        try:
+            self.played_list.pop(-1)
+            self.nbr = self.played_list[-1]
+            self.list.setCurrentRow(self.nbr)
+            self.played_list.pop(-1)
+            self.play()
+        except IndexError:
+            logging.warning("Played List Index out of range! (No song previously played)")
 
     def closeEvent(self, event):
         self.RPC.close()
@@ -667,6 +669,7 @@ class MainWindow(QtWidgets.QWidget):
         self.media = QtCore.QUrl.fromLocalFile(list_files()[self.list.currentRow()])
         self.file = QtMultimedia.QMediaContent(self.media)
         self.player.setMedia(self.file)
+        self.played_list.append(self.list.currentRow())
         if self.settings["style"] == "normal":
             self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/normal/pause.png")])
         else:

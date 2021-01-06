@@ -7,6 +7,7 @@ from fbs_runtime.application_context.PySide2 import ApplicationContext
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
 from glob import glob
 from pypresence import Presence
+from datetime import datetime
 
 import time, json, os, logging, eyed3, sys, random
 
@@ -493,6 +494,12 @@ class MainWindow(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         self.RPC.close()
+        with open(LOG_FILE, "r") as f:
+            self.content = f.read()
+            f.close()
+        with open(os.path.join(log_dir, str(datetime.now().strftime("Log_%d-%m-%Y_%H-%M-%S.txt"))), "w") as f:
+            f.write(self.content)
+            f.close()
         event.accept()
 
     def easter_egg(self):

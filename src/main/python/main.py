@@ -12,7 +12,7 @@ from datetime import datetime
 import time, json, os, logging, eyed3, sys, random
 
 cur_dir = os.path.join(os.path.expanduser("~"), "A+Music")
-# Gets the folder where setting file is gonna be.
+# Gets the folder where setting file and logs are gonna be.
 log_dir = os.path.join(cur_dir, "logs")
 LOG_FILE = os.path.join(os.path.join(log_dir, "latest_log.txt"))
 
@@ -259,6 +259,7 @@ class Help(QtWidgets.QWidget):
 
     def play_mode(self):
         self.output.setText("Output: Change the playing mode.")
+
 class MainWindow(QtWidgets.QWidget):
 
     def __init__(self, appctxt):
@@ -493,13 +494,16 @@ class MainWindow(QtWidgets.QWidget):
             logging.warning("Played List Index out of range! (No song previously played)")
 
     def closeEvent(self, event):
+        logging.info("Stoping RPC")
         self.RPC.close()
+        logging.info("Saving Logs with date for futur...")
         with open(LOG_FILE, "r") as f:
             self.content = f.read()
             f.close()
         with open(os.path.join(log_dir, str(datetime.now().strftime("Log_%d-%m-%Y_%H-%M-%S.txt"))), "w") as f:
             f.write(self.content)
             f.close()
+        logging.info("Closing")
         event.accept()
 
     def easter_egg(self):

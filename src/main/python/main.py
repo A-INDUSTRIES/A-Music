@@ -10,13 +10,17 @@ from pypresence import Presence
 
 import time, json, os, logging, eyed3, sys, random
 
-LOG_FILE = os.path.join(os.path.join(os.path.expanduser("~"), "A+Music"), "latest_log.txt")
-logging.basicConfig(level=logging.INFO, filename=LOG_FILE, filemode="w",
-                format='%(asctime)s - %(levelname)s - %(message)s')
-
 cur_dir = os.path.join(os.path.expanduser("~"), "A+Music")
 # Gets the folder where setting file is gonna be.
+log_dir = os.path.join(cur_dir, "logs")
+LOG_FILE = os.path.join(os.path.join(log_dir, "latest_log.txt"))
 
+if os.path.exists(log_dir):
+    logging.basicConfig(level=logging.INFO, filename=LOG_FILE, filemode="w",
+                format='%(asctime)s - %(levelname)s - %(message)s')
+else:
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+                
 #---------------------------------------------------------------------------------------UI_SECTION---------------------------------------------------------------------------------------
 
 class About(QtWidgets.QMessageBox):
@@ -1190,7 +1194,8 @@ def write_music_attributes(file, title, artist):
         error.exec_()
 
 def create_settings():
-    os.makedirs(os.path.join(cur_dir, ""), exist_ok=True)
+    os.makedirs(cur_dir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
     with open(os.path.join(cur_dir, "settings.json"), "w") as a:
         settings = {"folder": "C:/Users/pc/Music", "volume": 100, "easter_egg_on": False, "configured": False,
                     "style": "normal", "play_mode": "straight"}
@@ -1208,6 +1213,8 @@ def read_settings():
             create_settings()
             with open(os.path.join(cur_dir, "settings.json"), "r") as f:
                 return json.load(f)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir, exist_ok=True)
 
 def write_settings(settings) -> list:
     with open(os.path.join(cur_dir, "settings.json"), "w") as c:

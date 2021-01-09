@@ -1530,7 +1530,13 @@ def set_main_ui_slider(self, color):
 
 if __name__ == '__main__':
     appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
+    img = QtGui.QPixmap(appctxt.get_resource("icon.png"))
+    waiting = QtWidgets.QSplashScreen(img, QtCore.Qt.WindowStaysOnTopHint)
+    waiting.setFont(QtGui.QFont("Bahnschrift", 15, 2))
+    waiting.showMessage("\n\n\n\n\n\n\n\nStarting...", QtCore.Qt.AlignCenter, QtGui.QColor("red"))
+    waiting.show()
     window = MainWindow(appctxt)
     window.showNormal()
+    waiting.finish(window)
     exit_code = appctxt.app.exec_()      # 2. Invoke appctxt.app.exec_()
     sys.exit(exit_code)

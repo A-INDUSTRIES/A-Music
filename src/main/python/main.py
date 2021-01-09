@@ -31,14 +31,14 @@ class About(QtWidgets.QMessageBox):
         set_style(self)
         self.setWindowTitle("A+Music | About")
         self.setText("""A+Music is a basic music player wich is now playing only mp3.
-        This app is open-sourced. Therefore, you can edit the code as you wish.
-        This app has been developped by a teenager who is learning.
-        If you read this, you're God!
-        (Also, click once on the "A" of A+Music...)
-        (You can click another time on it to disable the thing.)
+This app is open-sourced. Therefore, you can edit the code as you wish.
+This app is beeing developped by a teenager who is learning.
+If you read this, you're An Amazing Person!
+(Also, click once on the "A" of A+Music...)
+(You can click another time on it to disable the thing.)
 
 
-        ΔINDUSTRIES.""")
+ΔINDUSTRIES.""")
 
 class Error(QtWidgets.QMessageBox):
 
@@ -89,6 +89,8 @@ class Help(QtWidgets.QWidget):
         self.lb_btn_back = QtWidgets.QLabel("Click to play the last song.")
         self.btn_stop = QtWidgets.QPushButton()
         self.lb_btn_stop = QtWidgets.QLabel("Click to stop the current playing song.")
+        self.btn_mode = QtWidgets.QPushButton()
+        self.lb_btn_mode = QtWidgets.QLabel("Click to change the play mode. (Either Follow-on or Shuffle)")
         self.btn_ok = QtWidgets.QPushButton("Ok")
         self.output = QtWidgets.QLabel("Output: None")
 
@@ -98,34 +100,40 @@ class Help(QtWidgets.QWidget):
         self.set_btn_size([self.btn_play,
                            self.btn_next,
                            self.btn_back,
-                           self.btn_stop], 25, 25)
+                           self.btn_stop,
+                           self.btn_mode], 25, 25)
         self.set_btn_flat([self.btn_play,
                            self.btn_next,
                            self.btn_back,
                            self.btn_stop,
-                           self.btn_setts, ], True)
+                           self.btn_setts,
+                           self.btn_mode, ], True)
         if read_settings()["style"] == "normal":
             self.set_btn_icon([self.btn_play,
                                self.btn_next,
                                self.btn_back,
                                self.btn_stop,
-                               self.btn_setts],
+                               self.btn_setts,
+                           self.btn_mode],
                               [self.appctxt.get_resource("icons/normal/play.png"),
                                self.appctxt.get_resource("icons/normal/next.png"),
                                self.appctxt.get_resource("icons/normal/back.png"),
                                self.appctxt.get_resource("icons/normal/stop.png"),
-                               self.appctxt.get_resource("icons/normal/more.png")])
+                               self.appctxt.get_resource("icons/normal/more.png"),
+                               self.appctxt.get_resource("icons/normal/shuffle.png")])
         else:
             self.set_btn_icon([self.btn_play,
                                self.btn_next,
                                self.btn_back,
                                self.btn_stop,
-                               self.btn_setts],
+                               self.btn_setts,
+                           self.btn_mode],
                               [self.appctxt.get_resource("icons/darkmode/play.png"),
                                self.appctxt.get_resource("icons/darkmode/next.png"),
                                self.appctxt.get_resource("icons/darkmode/back.png"),
                                self.appctxt.get_resource("icons/darkmode/stop.png"),
-                               self.appctxt.get_resource("icons/darkmode/more.png")])
+                               self.appctxt.get_resource("icons/darkmode/more.png"),
+                               self.appctxt.get_resource("icons/darkmode/shuffle.png")])
         self.time_bar.setOrientation(QtCore.Qt.Horizontal)
         self.btn_setts.setMenu(self.setts)
         self.btn_setts.setFixedSize(45, 25)
@@ -155,9 +163,11 @@ class Help(QtWidgets.QWidget):
         self.main_layout.addWidget(self.lb_btn_back, 6, 2)
         self.main_layout.addWidget(self.btn_stop, 7, 1)
         self.main_layout.addWidget(self.lb_btn_stop, 7, 2)
-        self.main_layout.addWidget(self.btn_setts, 8, 1)
-        self.main_layout.addWidget(self.lb_btn_setts, 8, 2)
-        self.main_layout.addWidget(self.output, 9, 1, 1, 2)
+        self.main_layout.addWidget(self.btn_mode, 8, 1)
+        self.main_layout.addWidget(self.lb_btn_mode, 8, 2)
+        self.main_layout.addWidget(self.btn_setts, 9, 1)
+        self.main_layout.addWidget(self.lb_btn_setts, 9, 2)
+        self.main_layout.addWidget(self.output, 10, 1, 1, 2)
 
     def setup_connections(self):
         self.btn_ok.clicked.connect(self.close)
@@ -169,6 +179,7 @@ class Help(QtWidgets.QWidget):
         self.btn_next.clicked.connect(self.next)
         self.btn_back.clicked.connect(self.back)
         self.sl_volume.valueChanged.connect(self.volume)
+        self.btn_mode.clicked.connect(self.mode)
 
     #   Methods---------------------------------------------------
 
@@ -257,7 +268,7 @@ class Help(QtWidgets.QWidget):
     def settings(self):
         self.output.setText("Output: Opened settings.")
 
-    def play_mode(self):
+    def mode(self):
         self.output.setText("Output: Change the playing mode.")
 
 class MainWindow(QtWidgets.QWidget):

@@ -340,6 +340,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lb_time = QtWidgets.QLabel("0:0 / 0:0")
         self.lb_volume = QtWidgets.QLabel()
         self.lb_img_volume = QtWidgets.QLabel()
+        self.lb_song_title_n_artist = QtWidgets.QLabel("")
 
         self.time_bar = QtWidgets.QSlider()
 
@@ -397,6 +398,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lb_time.setAlignment(QtCore.Qt.AlignCenter)
         self.lb_volume.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 12))
         self.lb_volume.setAlignment(QtCore.Qt.AlignCenter)
+        self.lb_song_title_n_artist.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 12))
 
         self.time_bar.setOrientation(QtCore.Qt.Horizontal)
         self.list.setDragEnabled(False)

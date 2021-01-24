@@ -1,9 +1,9 @@
 # Here are the futur **implementations/changes/patches** for the **2.1.1** update:
 ### Additions:
-- Play_mode button in help. `DONE`
+- Additon of a label to show current playing title and artist. `DONE`
 ***
 ### Changes:
 - None. *Cool!*
 ***
 ### Patches:
-- Fix unintended indentation in About. `DONE`
+- Fix problem with the Easter egg while changing color theme. `DONE`

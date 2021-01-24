@@ -1,7 +1,7 @@
 """
 Author: DAOUST A. @AINDUSTRIES
 Project: A+Music Player
-v2.0.1
+v2.1.1
 """
 from fbs_runtime.application_context.PySide2 import ApplicationContext
 from PySide2 import QtWidgets, QtCore, QtGui, QtMultimedia
@@ -314,7 +314,7 @@ class MainWindow(QtWidgets.QWidget):
         logging.info("Setting Shortcuts...")
         self.setup_shortcuts()
         logging.info("Opening Settings.")
-        self.open_settings()
+        self.open_settings(True)
         logging.info("Setting the Menu.")
         self.settings_menu()
         logging.info("Making Wizard if First Time.")
@@ -340,7 +340,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lb_time = QtWidgets.QLabel("0:0 / 0:0")
         self.lb_volume = QtWidgets.QLabel()
         self.lb_img_volume = QtWidgets.QLabel()
-        self.lb_song_title_n_artist = QtWidgets.QLabel("")
+        self.lb_song_title_n_artist = QtWidgets.QLabel("None by None")
 
         self.time_bar = QtWidgets.QSlider()
 
@@ -398,7 +398,7 @@ class MainWindow(QtWidgets.QWidget):
         self.lb_time.setAlignment(QtCore.Qt.AlignCenter)
         self.lb_volume.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 12))
         self.lb_volume.setAlignment(QtCore.Qt.AlignCenter)
-        self.lb_song_title_n_artist.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 12))
+        self.lb_song_title_n_artist.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 15))
 
         self.time_bar.setOrientation(QtCore.Qt.Horizontal)
         self.list.setDragEnabled(False)
@@ -431,18 +431,19 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.btn_max, 1, 21, 1, 1)
         self.main_layout.addWidget(self.btn_min, 1, 20, 1, 1)
         self.main_layout.addWidget(self.lb_title, 1, 1, 2, 11)
-        self.main_layout.addWidget(self.lb_time, 5, 19, 1, 3)
-        self.main_layout.addWidget(self.sg_resize, 5, 22, 1, 1, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
-        self.main_layout.addWidget(self.btn_play, 5, 2, 1, 1)
-        self.main_layout.addWidget(self.btn_back, 5, 1, 1, 1)
-        self.main_layout.addWidget(self.btn_next, 5, 3, 1, 1)
-        self.main_layout.addWidget(self.btn_stop, 5, 4, 1, 1)
+        self.main_layout.addWidget(self.lb_time, 6, 19, 1, 3)
+        self.main_layout.addWidget(self.sg_resize, 6, 22, 1, 1, QtCore.Qt.AlignBottom | QtCore.Qt.AlignRight)
+        self.main_layout.addWidget(self.btn_play, 6, 2, 1, 1)
+        self.main_layout.addWidget(self.btn_back, 6, 1, 1, 1)
+        self.main_layout.addWidget(self.btn_next, 6, 3, 1, 1)
+        self.main_layout.addWidget(self.btn_stop, 6, 4, 1, 1)
         self.main_layout.addWidget(self.list, 3, 1, 1, 22)
         self.main_layout.addWidget(self.btn_setts, 1, 19, 1, 1)
-        self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 12)
+        self.main_layout.addWidget(self.lb_img_volume, 6, 18, 1, 1)
+        self.main_layout.addWidget(self.time_bar, 6, 6, 1, 12)
         self.main_layout.addWidget(self.btn_easter_egg, 1, 1, 2, 1)
-        self.main_layout.addWidget(self.btn_play_mode, 5, 5, 1, 1)
+        self.main_layout.addWidget(self.btn_play_mode, 6, 5, 1, 1)
+        self.main_layout.addWidget(self.lb_song_title_n_artist, 5,1,1,22)
 
     def setup_connections(self):
         self.btn_close.clicked.connect(self.close)
@@ -521,6 +522,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def easter_egg(self):
         """Turning on/off easter egg."""
+        self.open_settings(False)
         if self.settings["easter_egg_on"] == False:
             self.easter_egg_timer = QtCore.QTimer()
             self.easter_egg_timer.setInterval(100)
@@ -625,8 +627,8 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.removeWidget(self.sl_volume)
         self.main_layout.removeWidget(self.lb_img_volume)
         self.main_layout.removeWidget(self.time_bar)
-        self.main_layout.addWidget(self.lb_img_volume, 5, 18, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 12)
+        self.main_layout.addWidget(self.lb_img_volume, 6, 18, 1, 1)
+        self.main_layout.addWidget(self.time_bar, 6, 6, 1, 12)
         self.sl_volume.setHidden(True)
         self.lb_volume.setHidden(True)
 
@@ -693,12 +695,12 @@ class MainWindow(QtWidgets.QWidget):
             self.list.setCurrentRow(random.randint(0, self.list.count()))
         self.play()
 
-    def open_settings(self):
+    def open_settings(self, easter_egg_check):
         """Reading user's settings on disc. Creates setting file if it doesn't exists with default values."""
         logging.info("Reading Settings.")
         self.settings = read_settings()
         self.sl_volume.setValue(self.settings["volume"])
-        if self.settings["easter_egg_on"] == True:
+        if self.settings["easter_egg_on"] == True and easter_egg_check==True:
             self.settings["easter_egg_on"] = False
             self.easter_egg()
 
@@ -714,6 +716,7 @@ class MainWindow(QtWidgets.QWidget):
         else:
             self.set_btn_icon([self.btn_play], [self.appctxt.get_resource("icons/darkmode/pause.png")])
         self.player.play()
+        self.lb_song_title_n_artist.setText(read_music_attributes(list_files()[self.list.currentRow()])["title"] + " by " + read_music_attributes(list_files()[self.list.currentRow()])["artist"])
         self.timer = QtCore.QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.play_bar_n_lb)
@@ -894,10 +897,10 @@ class MainWindow(QtWidgets.QWidget):
     def show_volume(self):
         self.main_layout.removeWidget(self.lb_img_volume)
         self.main_layout.removeWidget(self.time_bar)
-        self.main_layout.addWidget(self.lb_volume, 5, 18, 1, 1)
-        self.main_layout.addWidget(self.sl_volume, 5, 16, 1, 2)
-        self.main_layout.addWidget(self.lb_img_volume, 5, 15, 1, 1)
-        self.main_layout.addWidget(self.time_bar, 5, 6, 1, 9)
+        self.main_layout.addWidget(self.lb_volume, 6, 18, 1, 1)
+        self.main_layout.addWidget(self.sl_volume, 6, 16, 1, 2)
+        self.main_layout.addWidget(self.lb_img_volume, 6, 15, 1, 1)
+        self.main_layout.addWidget(self.time_bar, 6, 6, 1, 9)
         self.sl_volume.setHidden(False)
         self.lb_volume.setHidden(False)
 
@@ -941,7 +944,7 @@ class MainWindow(QtWidgets.QWidget):
             self.dialog = Wizard(cur_dir)
             self.dialog.exec_()
             logging.info("Reading Changes")
-            self.open_settings()
+            self.open_settings(True)
         else:
             pass
 
@@ -1230,6 +1233,7 @@ def read_settings():
         create_settings()
     with open(os.path.join(cur_dir, "settings.json"), "r") as f:
         settings = json.load(f)
+        f.close()
         try:
             if settings["style"] and settings["play_mode"]:
                 return settings
@@ -1243,6 +1247,7 @@ def read_settings():
 def write_settings(settings) -> list:
     with open(os.path.join(cur_dir, "settings.json"), "w") as c:
         json.dump(settings, c)
+        c.close()
 
 def set_style(self):
     if read_settings()["style"] == "dark":

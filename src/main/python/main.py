@@ -727,6 +727,8 @@ class MainWindow(QtWidgets.QWidget):
         self.timer.start()
         self.timerb.start()
         self.refresh_volume()
+        self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"], self.play_pause, self.next, self.back, self.stop)
+        self.now_playin.show()
 
     def play_bar_n_lb(self):
         """Allowing user to see/edit song's position by showing them on widgets."""
@@ -1183,6 +1185,32 @@ class Wizard(QtWidgets.QWizard):
         self.settings["configured"] = True
         write_settings(self.settings)
 
+class Now_Playing(QtWidgets.QWidget):
+    def __init__(self, title, artist, play_pause, next, previous, stop):
+        super().__init__()
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setFixedSize(500, 100)
+        self.setWindowOpacity(0)
+        self.btm_right()
+        self.setup()
+        self.anim()
+
+    def setup(self):
+        pass
+
+    def anim(self):
+        self.anim1 = QtCore.QPropertyAnimation(self, b"windowOpacity")
+        self.anim1.setStartValue(0)
+        self.anim1.setEndValue(1)
+        self.anim1.setDuration(1000)
+        self.anim1.start()
+        
+    def btm_right(self):
+        qRect = self.frameGeometry()
+        bottomrightPoint = QtWidgets.QDesktopWidget().availableGeometry().bottomRight()
+        qRect.moveBottomRight(bottomrightPoint)
+        self.move(qRect.topLeft())
 #-------------------------------------------------------------------------------------UI_SECTION_END-------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------API_SECTION--------------------------------------------------------------------------------------

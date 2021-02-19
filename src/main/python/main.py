@@ -727,9 +727,9 @@ class MainWindow(QtWidgets.QWidget):
         self.timer.start()
         self.timerb.start()
         self.refresh_volume()
-        self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"])
-        self.now_playin.show()
-        self.setFocus(QtCore.Qt.MouseFocusReason)
+        if self.isHidden():
+            self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"])
+            self.now_playin.show()
 
     def play_bar_n_lb(self):
         """Allowing user to see/edit song's position by showing them on widgets."""
@@ -1231,13 +1231,13 @@ class Now_Playing(QtWidgets.QWidget):
         self.timer = QtCore.QTimer()
         self.timer.setInterval(3500)
         self.timer.setSingleShot(True)
-        self.timer.timeout.connect(self.close)
+        self.timer.timeout.connect(self.hide)
         self.timer.start()
         
     def btm_right(self):
         self.qRect = self.frameGeometry()
         self.bottomrightPoint = QtWidgets.QDesktopWidget().availableGeometry().bottomRight()
-        self.qRect.moveBottomRight(self.bottomrightPoint)
+        self.qRect.moveBottomRight(QtCore.QPoint(self.bottomrightPoint.x() - 5, self.bottomrightPoint.y() - 5))
         self.move(self.qRect.topLeft())
 #-------------------------------------------------------------------------------------UI_SECTION_END-------------------------------------------------------------------------------------
 

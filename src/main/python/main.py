@@ -727,8 +727,9 @@ class MainWindow(QtWidgets.QWidget):
         self.timer.start()
         self.timerb.start()
         self.refresh_volume()
-        self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"], self.play_pause, self.next, self.back, self.stop)
+        self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"])
         self.now_playin.show()
+        self.setFocus(QtCore.Qt.MouseFocusReason)
 
     def play_bar_n_lb(self):
         """Allowing user to see/edit song's position by showing them on widgets."""
@@ -1186,31 +1187,58 @@ class Wizard(QtWidgets.QWizard):
         write_settings(self.settings)
 
 class Now_Playing(QtWidgets.QWidget):
-    def __init__(self, title, artist, play_pause, next, previous, stop):
+    def __init__(self, title, artist):
         super().__init__()
+        self.title = title
+        self.artist = artist
+        self.setWindowFlags(QtCore.Qt.WindowTransparentForInput)
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(QtCore.Qt.WindowDoesNotAcceptFocus)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setFixedSize(500, 100)
-        self.setWindowOpacity(0)
+        set_style(self)
         self.btm_right()
         self.setup()
         self.anim()
 
     def setup(self):
-        pass
+        self.lb1 = QtWidgets.QLabel("A+Music")
+        self.lb2 = QtWidgets.QLabel("Now Playing " + self.title + " by " + self.artist)
+        lb_size = len(self.lb2.text())
+        self.lb1.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 14))
+        self.lb2.setFont(QtGui.QFont("Bahnschrift SemiBold SemiConden", 850 / lb_size))
+        self.lb1.setStyleSheet("QLabel { color : red; }")
+        self.main_layout = QtWidgets.QVBoxLayout(self)
+        self.main_layout.setAlignment(QtCore.Qt.AlignLeft)
+        self.main_layout.addWidget(self.lb1)
+        self.main_layout.addWidget(self.lb2)
 
     def anim(self):
-        self.anim1 = QtCore.QPropertyAnimation(self, b"windowOpacity")
-        self.anim1.setStartValue(0)
-        self.anim1.setEndValue(1)
+        self.anim1 = QtCore.QPropertyAnimation(self, b"pos")
+        self.anim1.setEasingCurve(QtCore.QEasingCurve.InOutCubic)
+        self.anim1.setStartValue(QtCore.QPoint(self.x() + 500, self.y()))
+        self.anim1.setEndValue(self.pos())
         self.anim1.setDuration(1000)
-        self.anim1.start()
+        self.anim2 = QtCore.QPropertyAnimation(self, b"windowOpacity")
+        self.anim2.setStartValue(1)
+        self.anim2.setEndValue(0)
+        self.anim2.setDuration(500)
+        self.anim_group = QtCore.QSequentialAnimationGroup()
+        self.anim_group.addAnimation(self.anim1)
+        self.anim_group.addPause(2000)
+        self.anim_group.addAnimation(self.anim2)
+        self.anim_group.start()
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(3500)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.close)
+        self.timer.start()
         
     def btm_right(self):
-        qRect = self.frameGeometry()
-        bottomrightPoint = QtWidgets.QDesktopWidget().availableGeometry().bottomRight()
-        qRect.moveBottomRight(bottomrightPoint)
-        self.move(qRect.topLeft())
+        self.qRect = self.frameGeometry()
+        self.bottomrightPoint = QtWidgets.QDesktopWidget().availableGeometry().bottomRight()
+        self.qRect.moveBottomRight(self.bottomrightPoint)
+        self.move(self.qRect.topLeft())
 #-------------------------------------------------------------------------------------UI_SECTION_END-------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------API_SECTION--------------------------------------------------------------------------------------

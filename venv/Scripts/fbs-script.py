@@ -1,4 +1,4 @@
-#!c:\users\aindustries\documents\github\a-music\venv\scripts\python.exe
+#!c:\users\alexandre\documents\github\a-music\venv\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'fbs==0.8.6','console_scripts','fbs'
 __requires__ = 'fbs==0.8.6'
 import re

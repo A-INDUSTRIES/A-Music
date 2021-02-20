@@ -1,4 +1,4 @@
-#!c:\users\aindustries\documents\github\a-music\venv\scripts\python.exe
+#!c:\users\alexandre\documents\github\a-music\venv\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','futurize'
 __requires__ = 'future==0.18.2'
 import re

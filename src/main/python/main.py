@@ -9,7 +9,7 @@ from glob import glob
 from pypresence import Presence
 from datetime import datetime
 
-import time, json, os, logging, eyed3, sys, random
+import time, json, os, logging, eyed3, sys, random, keyboard
 
 cur_dir = os.path.join(os.path.expanduser("~"), "A+Music")
 # Gets the folder where setting file and logs are gonna be.
@@ -730,6 +730,7 @@ class MainWindow(QtWidgets.QWidget):
         if self.isHidden():
             self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"])
             self.now_playin.show()
+            print(self.now_playin.hasFocus())
 
     def play_bar_n_lb(self):
         """Allowing user to see/edit song's position by showing them on widgets."""
@@ -1191,12 +1192,18 @@ class Now_Playing(QtWidgets.QWidget):
         super().__init__()
         self.title = title
         self.artist = artist
-        self.setWindowFlags(QtCore.Qt.WindowTransparentForInput)
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        self.setWindowFlags(QtCore.Qt.WindowDoesNotAcceptFocus)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(QtCore.Qt.X11BypassWindowManagerHint |
+            QtCore.Qt.FramelessWindowHint |
+            QtCore.Qt.WindowStaysOnTopHint |
+            QtCore.Qt.WindowTransparentForInput |
+            QtCore.Qt.WindowDoesNotAcceptFocus |
+            QtCore.Qt.NoDropShadowWindowHint |
+            QtCore.Qt.WindowSystemMenuHint)
+        self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
+        self.setAttribute(QtCore.Qt.WA_InputMethodEnabled, False)
         self.setFixedSize(500, 100)
         set_style(self)
+        keyboard.add_hotkey("alt", "tab")
         self.btm_right()
         self.setup()
         self.anim()
@@ -1239,6 +1246,9 @@ class Now_Playing(QtWidgets.QWidget):
         self.bottomrightPoint = QtWidgets.QDesktopWidget().availableGeometry().bottomRight()
         self.qRect.moveBottomRight(QtCore.QPoint(self.bottomrightPoint.x() - 5, self.bottomrightPoint.y() - 5))
         self.move(self.qRect.topLeft())
+
+    def keyPressEvent(self, event):
+        event.ignore()
 #-------------------------------------------------------------------------------------UI_SECTION_END-------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------API_SECTION--------------------------------------------------------------------------------------

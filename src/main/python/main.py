@@ -729,7 +729,7 @@ class MainWindow(QtWidgets.QWidget):
         if self.isHidden():
             self.now_playin = Now_Playing(read_music_attributes(list_files()[self.list.currentRow()])["title"], read_music_attributes(list_files()[self.list.currentRow()])["artist"])
             self.now_playin.show()
-            print(self.now_playin.hasFocus())
+            keyboard.press_and_release("alt+tab")
 
     def play_bar_n_lb(self):
         """Allowing user to see/edit song's position by showing them on widgets."""
@@ -1192,12 +1192,18 @@ class Now_Playing(QtWidgets.QWidget):
         self.title = title
         self.artist = artist
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint |
+            QtCore.Qt.Window |
             QtCore.Qt.WindowStaysOnTopHint |
             QtCore.Qt.WindowTransparentForInput |
             QtCore.Qt.WindowDoesNotAcceptFocus |
             QtCore.Qt.NoDropShadowWindowHint |
             QtCore.Qt.WindowSystemMenuHint |
-            QtCore.Qt.X11BypassWindowManagerHint)
+            QtCore.Qt.BypassWindowManagerHint |
+            QtCore.Qt.BypassGraphicsProxyWidget |
+            QtCore.Qt.X11BypassWindowManagerHint |
+            QtCore.Qt.WA_X11BypassTransientForHint |
+            QtCore.Qt.TextBypassShaping |
+            QtCore.Qt.CustomizeWindowHint)
         self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
         self.setAttribute(QtCore.Qt.WA_InputMethodEnabled, False)
         self.setFixedSize(500, 100)

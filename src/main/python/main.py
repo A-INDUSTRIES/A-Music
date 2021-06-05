@@ -706,7 +706,6 @@ class MainWindow(QtWidgets.QWidget):
 
     def play(self):
         """Plays the selected track."""
-        logging.info("Playing Track " + list_files()[self.list.currentRow()] + ".")
         self.media = QtCore.QUrl.fromLocalFile(list_files()[self.list.currentRow()])
         self.file = QtMultimedia.QMediaContent(self.media)
         self.player.setMedia(self.file)
@@ -1192,13 +1191,13 @@ class Now_Playing(QtWidgets.QWidget):
         super().__init__()
         self.title = title
         self.artist = artist
-        self.setWindowFlags(QtCore.Qt.X11BypassWindowManagerHint |
-            QtCore.Qt.FramelessWindowHint |
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint |
             QtCore.Qt.WindowStaysOnTopHint |
             QtCore.Qt.WindowTransparentForInput |
             QtCore.Qt.WindowDoesNotAcceptFocus |
             QtCore.Qt.NoDropShadowWindowHint |
-            QtCore.Qt.WindowSystemMenuHint)
+            QtCore.Qt.WindowSystemMenuHint |
+            QtCore.Qt.X11BypassWindowManagerHint)
         self.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
         self.setAttribute(QtCore.Qt.WA_InputMethodEnabled, False)
         self.setFixedSize(500, 100)

@@ -1,5 +1,6 @@
 > [!CAUTION]
-> This repository had been archived. This app will not be maintained!
+> This application has not been updated in years and will not be.
+> Consider this repository as Archived.
 # ![Icon](https://github.com/A-INDUSTRIES/A-Music/blob/master/.AppIcon.png)A+Music
 ### A simple music player coded in Python by a learner.
 ###### To Download it:

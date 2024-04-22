@@ -1,3 +1,5 @@
+> [!CAUTION]
+> This repository had been archived. This app will not be maintained!
 # ![Icon](https://github.com/A-INDUSTRIES/A-Music/blob/master/.AppIcon.png)A+Music
 ### A simple music player coded in Python by a learner.
 ###### To Download it:
